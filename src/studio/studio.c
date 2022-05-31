@@ -1078,12 +1078,17 @@ ClipboardEvent getClipboardEvent(Studio* studio)
 
     bool shift = tic_api_key(tic, tic_key_shift);
     bool ctrl = tic_api_key(tic, tic_key_ctrl);
+    bool alt = tic_api_key(tic, tic_key_alt);
 
-    if(ctrl)
+    if (alt)
+    {
+      if(keyWasPressed(studio, tic_key_w)) return TIC_CLIPBOARD_COPY;
+    }
+    else if(ctrl)
     {
         if(keyWasPressed(studio, tic_key_insert) || keyWasPressed(studio, tic_key_c)) return TIC_CLIPBOARD_COPY;
-        else if(keyWasPressed(studio, tic_key_x)) return TIC_CLIPBOARD_CUT;
-        else if(keyWasPressed(studio, tic_key_v)) return TIC_CLIPBOARD_PASTE;
+        else if(keyWasPressed(studio, tic_key_x) || keyWasPressed(studio, tic_key_w)) return TIC_CLIPBOARD_CUT;
+        else if(keyWasPressed(studio, tic_key_v) || keyWasPressed(studio, tic_key_y)) return TIC_CLIPBOARD_PASTE;
     }
     else if(shift)
     {

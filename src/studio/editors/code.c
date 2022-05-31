@@ -1632,22 +1632,55 @@ static void processKeyboard(Code* code)
         if(ctrl)
         {
             if(keyWasPressed(code->studio, tic_key_tab))        doTab(code, shift, ctrl);
-            else if(keyWasPressed(code->studio, tic_key_a))     selectAll(code);
+            else if(keyWasPressed(code->studio, tic_key_a))     {
+              changedSelection=true;
+              goHome(code);
+            }
+            else if(keyWasPressed(code->studio, tic_key_f))     {
+              changedSelection=true;
+              rightColumn(code);
+            }
+            else if(keyWasPressed(code->studio, tic_key_b))     {
+              changedSelection=true;
+              leftColumn(code);
+            }
+            else if(keyWasPressed(code->studio, tic_key_n))     {
+              changedSelection=true;
+              downLine(code);
+            }
+            else if(keyWasPressed(code->studio, tic_key_p))     {
+              changedSelection=true;
+              upLine(code);
+            }
+            else if(keyWasPressed(code->studio, tic_key_k))     {
+              code->cursor.selection = code->cursor.position;
+              goEnd(code);
+              rightColumn(code);
+              changedSelection=true;
+              cutToClipboard(code);
+              code->cursor.selection = NULL;
+            }
+            else if(keyWasPressed(code->studio, tic_key_d))           deleteChar(code);
+            else if(keyWasPressed(code->studio, tic_key_space)) {
+              if(code->cursor.selection == NULL) code->cursor.selection = code->cursor.position;
+              else code->cursor.selection = NULL;
+              changedSelection = true;
+            }
+            
             else if(keyWasPressed(code->studio, tic_key_z))     undo(code);
             else if(keyWasPressed(code->studio, tic_key_y))     redo(code);
-            else if(keyWasPressed(code->studio, tic_key_f))     setCodeMode(code, TEXT_FIND_MODE);
+            else if(keyWasPressed(code->studio, tic_key_s))     setCodeMode(code, TEXT_FIND_MODE);
             else if(keyWasPressed(code->studio, tic_key_g))     setCodeMode(code, TEXT_GOTO_MODE);
             else if(keyWasPressed(code->studio, tic_key_b))     setCodeMode(code, TEXT_BOOKMARK_MODE);
             else if(keyWasPressed(code->studio, tic_key_o))     setCodeMode(code, TEXT_OUTLINE_MODE);
-            else if(keyWasPressed(code->studio, tic_key_n))     downLine(code);
-            else if(keyWasPressed(code->studio, tic_key_p))     upLine(code);
-            else if(keyWasPressed(code->studio, tic_key_e))     endLine(code);
+            else if(keyWasPressed(code->studio, tic_key_e))     goEnd(code);
             else if(keyWasPressed(code->studio, tic_key_d))     dupLine(code);
             else if(keyWasPressed(code->studio, tic_key_slash)) commentLine(code);
             else if(keyWasPressed(code->studio, tic_key_home))  goCodeHome(code);
             else if(keyWasPressed(code->studio, tic_key_end))   goCodeEnd(code);
             else ctrlHandled = false;
         }
+
 
         bool ctrlAltHandled = true;
         if(keyWasPressed(code->studio, tic_key_left))           leftWord(code);
